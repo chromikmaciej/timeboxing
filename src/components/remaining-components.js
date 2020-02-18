@@ -42,9 +42,18 @@ function TimeboxEditor(props) {
     );
 }
 
-function ProgressBar({ className = "", percent = 80, trackRemaining = false }) {
+function ProgressBar({ className = "", percent = 80, big = false, color = null, trackRemaining = false }) {
 
     var mfloat;
+
+    let progressClassName = "progress " + className;
+
+    if (big) {
+        progressClassName += " progress--big"
+    }
+    if (color === "red") {
+        progressClassName += " progress--color-red"
+    }
 
     if (trackRemaining) {
         percent = 100 - percent;
@@ -54,7 +63,7 @@ function ProgressBar({ className = "", percent = 80, trackRemaining = false }) {
     }
 
     return (
-        <div className={"progress progress--big progress--color-red" + className}>
+        <div className={progressClassName}>
             <div className="progress__bar" style={{ width: `${percent}%`, float: `${mfloat}` }}></div>
         </div>
     );
@@ -139,7 +148,12 @@ class CurrentTimebox extends React.Component {
             <div className={`CurrentTimebox ${isEditable ? "inactive" : ""}`} >
                 <h1>{title}</h1>
                 <Clock minutes={minutesLeft} seconds={secondsLeft} className={isPaused ? "inactive" : ""} />
-                <ProgressBar percent={progressInPercent} className={isPaused ? "inactive" : ""} trackRemaining={false} />
+                <ProgressBar
+                    percent={progressInPercent}
+                    className={isPaused ? "inactive" : ""} trackRemaining={false}
+                    color="red"
+                    big
+                />
                 <button onClick={onEdit} disabled={isEditable}>Edytuj</button>
                 <button onClick={this.handleStart} disabled={isRunning}>Start</button>
                 <button onClick={this.handleStop} disabled={!isRunning}>Stop</button>
