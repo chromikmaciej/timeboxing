@@ -54,8 +54,8 @@ function ProgressBar({ className = "", percent = 80, trackRemaining = false }) {
     }
 
     return (
-        <div className={"ProgressBar " + className}>
-            <div style={{ width: `${percent}%`, float: `${mfloat}` }}></div>
+        <div className={"progress progress--big progress--color-red" + className}>
+            <div className="progress__bar" style={{ width: `${percent}%`, float: `${mfloat}` }}></div>
         </div>
     );
 
