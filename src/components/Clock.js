@@ -1,6 +1,7 @@
 import React from "react";
+import PropTypes from "prop-types";
 
-function Clock({ className = "", hours = 0, minutes = 0, seconds = 0, miliseconds = 0 }) {
+function Clock({ className, hours, minutes, seconds, miliseconds }) {
     if (hours < 0) {
         hours = 0;
     }
@@ -45,6 +46,23 @@ function Clock({ className = "", hours = 0, minutes = 0, seconds = 0, milisecond
     return (
         <h2 className={"Clock " + className}>Pozostało {hours}:{minutes}:{seconds}.{miliseconds}</h2>
     );
+}
+
+Clock.defaultProps = {
+    className: "",
+    miliseconds: 0
+}
+function NonNegativeNumberType(props, propName, componentName) {
+    if (props[propName] < 0) {
+        return new Error(`Invalid prop '${propName}' issued to component '${componentName}'. It has to be greater or equal to 0.`);
+    }
+}
+const NumberOrStringType = PropTypes.oneOfType([PropTypes.number, PropTypes.string]);
+Clock.propTypes = {
+    className: PropTypes.string.isRequired,
+    minutes: NumberOrStringType.isRequired,
+    seconds: NonNegativeNumberType,
+    miliseconds: NumberOrStringType
 }
 
 export default Clock;
