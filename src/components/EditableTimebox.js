@@ -6,7 +6,7 @@ class EditableTimebox extends React.Component {
     state = {
         title: "Uczę się",
         totalTimeInMinutes: 15,
-        isEditable: true
+        isEditable: false
     }
     handleTitleChange = (event) => {
         this.setState({ title: event.target.value })
