@@ -12,8 +12,7 @@ class TimeboxList extends React.Component {
             { id: "2", title: "Poznaję REST API", totalTimeInMinutes: 10 },
             { id: "3", title: "Ćwiczę async/await", totalTimeInMinutes: 15 },
             { id: "4", title: "Uczę się fetch", totalTimeInMinutes: 5 }
-        ],
-        hasError: false
+        ]
     }
 
     addTimebox = (timebox) => {
