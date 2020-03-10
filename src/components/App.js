@@ -2,19 +2,45 @@ import React from "react";
 import TimeboxList from "./TimeboxList";
 import EditableTimebox from "./EditableTimebox";
 import ErrorBoundary from "./ErrorBoundary";
+import LoginForm from "./LoginForm";
+import AuthenticationAPI from "../api/FetchAuthenticationAPI";
+import jwt from "jsonwebtoken";
 
 class App extends React.Component {
 
+    state = {
+        accessToken: null,
+        previousLoginAttemptFailed: false
+    }
+
     isUserLoggedIn() {
-        return true;
+        return !!this.state.accessToken;
     }
 
     getUserEmail() {
-        return "al@example.com";
+        const decodedToken = jwt.decode(this.state.accessToken);
+        return decodedToken.email;
+    }
+
+    handleLoginAttempt = (credentials) => {
+        AuthenticationAPI.login(credentials)
+            .then(({ accessToken }) => {
+                this.setState({
+                    accessToken,
+                    previousLoginAttemptFailed: false
+                })
+            }).catch(() => {
+                this.setState({
+                    previousLoginAttemptFailed: true
+                })
+            })
     }
 
     handleLogout = () => {
-        console.log("handle logout");
+        this.setState({
+            accessToken: null,
+            previousLoginAttemptFailed: false
+        })
     }
     render() {
         return (
@@ -22,17 +48,20 @@ class App extends React.Component {
                 <ErrorBoundary message="Coś nie działa w całej aplikacji">
                     {
                         this.isUserLoggedIn() ?
-                        <>
-                            <header className="header">
-                                Witaj {this.getUserEmail()}
-                                <a onClick={this.handleLogout} className="header__logout-link" href="#">Wyloguj się</a>
-                            </header>
-                            <TimeboxList />
-                            <ErrorBoundary message="Coś nie działa w EditableTimebox">
-                                <EditableTimebox />
-                            </ErrorBoundary>
-                        </>:
-                        <div>Login form</div>
+                            <>
+                                <header className="header">
+                                    Witaj {this.getUserEmail()}
+                                    <a onClick={this.handleLogout} className="header__logout-link" href="#">Wyloguj się</a>
+                                </header>
+                                <TimeboxList />
+                                <ErrorBoundary message="Coś nie działa w EditableTimebox">
+                                    <EditableTimebox />
+                                </ErrorBoundary>
+                            </> :
+                            <LoginForm
+                                errorMessage={this.state.previousLoginAttemptFailed ? "Nie udało się zalogować" : null}
+                                onLoginAttempt={this.handleLoginAttempt}
+                            />
                     }
                 </ErrorBoundary>
             </div>

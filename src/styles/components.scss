@@ -5,7 +5,7 @@
     margin-bottom: 10px;
 }
 
-.TimeboxEditor, .TimeboxCreator {
+.TimeboxEditor, .TimeboxCreator, .LoginForm {
     text-align: right;
     border: $default-border;
     border-radius: $border-radius;
@@ -86,4 +86,14 @@ button {
     }
 }
 
+.LoginForm {
+    &__error-message {
+        margin: 15px auto;
+        text-align: center;
+        border: 1px solid red;
+        padding: 10px;
+        border-radius: 5px;
+        color: red;
+    }
+}
 
