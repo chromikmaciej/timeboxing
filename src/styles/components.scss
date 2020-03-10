@@ -76,4 +76,14 @@ button {
     }
 }
 
+.header {
+    display: flex;
+    justify-content: flex-end;
+    margin: 15px;
+
+    &__logout-link {
+        margin-left: 10px;
+    }
+}
+
 
