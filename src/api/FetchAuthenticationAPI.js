@@ -1,3 +1,5 @@
+import makeRequest from "./makeFetchRequest";
+
 const BASE_URL = "http://localhost:4000";
 const FetchAuthenticationAPI = {
     login: async function addTimebox(credentials) {
@@ -8,18 +10,3 @@ const FetchAuthenticationAPI = {
 }
 
 export default FetchAuthenticationAPI;
-
-async function makeRequest(url, method, body) {
-    const jsonBody = body ? JSON.stringify(body) : undefined;
-    const response = await window.fetch(url, {
-        method: method,
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: jsonBody
-    });
-    if (!response.ok) {
-        throw new Error("Something went wrong!");
-    }
-    return response;
-}
