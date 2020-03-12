@@ -4,7 +4,9 @@ import EditableTimebox from "./EditableTimebox";
 import ErrorBoundary from "./ErrorBoundary";
 import LoginForm from "./LoginForm";
 import AuthenticationAPI from "../api/FetchAuthenticationAPI";
-import jwt from "jsonwebtoken";
+import AuthenticationContext from "../contexts/AuthenticationContext";
+
+import AuthenticatedApp from "./AuthenticatedApp";
 
 class App extends React.Component {
 
@@ -15,11 +17,6 @@ class App extends React.Component {
 
     isUserLoggedIn() {
         return !!this.state.accessToken;
-    }
-
-    getUserEmail() {
-        const decodedToken = jwt.decode(this.state.accessToken);
-        return decodedToken.email;
     }
 
     handleLoginAttempt = (credentials) => {
@@ -48,16 +45,12 @@ class App extends React.Component {
                 <ErrorBoundary message="Coś nie działa w całej aplikacji">
                     {
                         this.isUserLoggedIn() ?
-                            <>
-                                <header className="header">
-                                    Witaj {this.getUserEmail()}
-                                    <a onClick={this.handleLogout} className="header__logout-link" href="#">Wyloguj się</a>
-                                </header>
-                                <TimeboxList accessToken={this.state.accessToken} />
-                                <ErrorBoundary message="Coś nie działa w EditableTimebox">
-                                    <EditableTimebox />
-                                </ErrorBoundary>
-                            </> :
+                            <AuthenticationContext.Provider value={ {accessToken: this.state.accessToken} }>
+                                <AuthenticatedApp
+                                    onLogout={this.handleLogout}
+                                />
+                                
+                            </AuthenticationContext.Provider> :
                             <LoginForm
                                 errorMessage={this.state.previousLoginAttemptFailed ? "Nie udało się zalogować" : null}
                                 onLoginAttempt={this.handleLoginAttempt}

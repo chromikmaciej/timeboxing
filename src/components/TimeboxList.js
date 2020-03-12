@@ -3,6 +3,7 @@ import uuid from "uuid";
 import TimeboxCreator from "./TimeboxCreator";
 import Timebox from "./Timebox";
 import TimeboxesAPI from "../api/FetchTimeboxesAPI";
+import AuthenticationContext from "../contexts/AuthenticationContext";
 
 class TimeboxList extends React.Component {
     state = {
@@ -12,7 +13,7 @@ class TimeboxList extends React.Component {
     }
 
     componentDidMount() {
-        TimeboxesAPI.getAllTimeboxes(this.props.accessToken).then(
+        TimeboxesAPI.getAllTimeboxes(this.context.accessToken).then(
             (timeboxes) => this.setState({ timeboxes })
         ).catch(
             (error) => Promise.reject(this.setState({ error }))
@@ -93,5 +94,6 @@ class TimeboxList extends React.Component {
         )
     }
 }
+TimeboxList.contextType = AuthenticationContext;
 
 export default TimeboxList;
