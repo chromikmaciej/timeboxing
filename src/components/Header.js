@@ -8,7 +8,7 @@ function Header({onLogout}) {
                 <a
                     onClick={onLogout}
                     className="header__logout-link"
-                    href="#"
+                    href="/"
                 >
                     Wyloguj się
                 </a>

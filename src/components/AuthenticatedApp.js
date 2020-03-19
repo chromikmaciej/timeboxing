@@ -2,7 +2,7 @@ import React from "react";
 import Header from "./Header";
 import EditableTimebox from "./EditableTimebox";
 import TimeboxesManager from "./TimeboxesManager";
-import InspirationalQuote from "./InspirationalQuote";
+import InspirationalQuoteManager from "./InspirationalQuoteManager";
 
 function AuthenticatedApp({ accessToken, onLogout }) {
     return (
@@ -10,7 +10,7 @@ function AuthenticatedApp({ accessToken, onLogout }) {
             <Header onLogout={onLogout} />
             <TimeboxesManager />
             <EditableTimebox />
-            <InspirationalQuote />
+            <InspirationalQuoteManager />
         </>
     );
 }
