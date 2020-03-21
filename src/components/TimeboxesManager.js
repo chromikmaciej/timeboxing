@@ -3,6 +3,8 @@ import TimeboxCreator from "./TimeboxCreator";
 import TimeboxesAPI from "../api/FetchTimeboxesAPI";
 import AuthenticationContext from "../contexts/AuthenticationContext";
 import { TimeboxesList } from "./TimeboxesList";
+import Timebox from "./Timebox";
+import ReadOnlyTimebox from "./ReadOnlyTimebox";
 
 class TimeboxesManager extends React.Component {
     state = {
@@ -62,6 +64,24 @@ class TimeboxesManager extends React.Component {
 
     }
 
+    renderTimebox(timebox, index) {
+        return <Timebox
+            key={timebox.id}
+            title={timebox.title}
+            totalTimeInMinutes={timebox.totalTimeInMinutes}
+            onDelete={() => this.removeTimebox(index)}
+            onEdit={() => this.updateTimebox(index, { ...timebox, title: "Updated timebox" })}
+        />
+    }
+
+    renderReadOnlyTimebox(timebox, index) {
+        return <ReadOnlyTimebox
+            key={timebox.id}
+            title={timebox.title}
+            totalTimeInMinutes={timebox.totalTimeInMinutes}
+        />
+    }
+
     render() {
         console.table(this.state.timeboxes);
         return (
@@ -72,9 +92,9 @@ class TimeboxesManager extends React.Component {
                 {this.state.loading ? "Timeboxy się ładują ..." : null}
                 {this.state.error ? "Nie udało się załadować " : null}
                 <TimeboxesList
-                 timeboxes={this.state.timeboxes}
-                 onTimeboxDelete={this.removeTimebox}
-                 onTimeboxEdit={this.updateTimebox}
+                    timeboxes={this.state.timeboxes}
+                    //renderTimebox={Math.random() < 0.5 ? this.renderTimebox : this.renderReadOnlyTimebox}
+                    renderTimebox={this.renderTimebox}
                 />
             </>
         )
