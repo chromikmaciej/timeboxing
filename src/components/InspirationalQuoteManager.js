@@ -1,7 +1,11 @@
 import React from "react";
-import { InspirationalQuoteViewer } from "./AlternativeInspirationalQuoteViewer";
+import { InspirationalQuoteViewer } from "./InspirationalQuoteViewer";
 
 class InspirationalQuoteManager extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    
     state = {
         quote: null
     }
@@ -19,6 +23,7 @@ class InspirationalQuoteManager extends React.Component {
                 <InspirationalQuoteViewer
                     text={this.state.quote.text}
                     author={this.state.quote.author}
+                    render={this.props.render}
                 /> :
                     "...."
                 }

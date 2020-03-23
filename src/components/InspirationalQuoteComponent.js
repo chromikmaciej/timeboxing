@@ -1,8 +1,7 @@
 import React from "react";
-import "../styles/inspirationalquote.css";
-export function InspirationalQuoteViewer({ text, author }) {
+export function InspirationalQuoteComponent({ text, author }) {
     return (
-     <figure className="InspirationalQuote">
+     <figure>
         <blockquote className="Text">{text}</blockquote>
         <figcaption className="Author"><cite>{author}</cite></figcaption>
     </figure>);
