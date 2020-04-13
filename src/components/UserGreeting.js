@@ -14,6 +14,7 @@ function UserGreeting(props) {
 
 export default UserGreeting;
 
+
 function getUserEmail(accessToken) {
     const decodedToken = jwt.decode(accessToken);
     return decodedToken.email;
