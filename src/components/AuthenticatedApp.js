@@ -3,11 +3,21 @@ import Header from "./Header";
 import CurrentTimebox from "./CurrentTimebox";
 import TimeboxesManager from "./TimeboxesManager";
 import InspirationalQuote from "./InspirationalQuote";
+import UserGreeting from "./UserGreeting"
 
 function AuthenticatedApp({ onLogout}) {
     return (
         <>
-            <Header onLogout={onLogout} />
+            <Header>
+                {/* <UserGreeting />
+                    <a 
+                        onClick={onLogout} 
+                        className="header__logout-link" 
+                        href="#"
+                    >
+                    Wyloguj się
+                    </a> */}
+            </Header>
             <TimeboxesManager />
             <CurrentTimebox 
                         title="Uczę się zaawansowanych wzorców" 
