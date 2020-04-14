@@ -9,14 +9,14 @@ function AuthenticatedApp({ onLogout}) {
     return (
         <>
             <Header>
-                {/* <UserGreeting />
+                <UserGreeting />
                     <a 
                         onClick={onLogout} 
                         className="header__logout-link" 
                         href="#"
                     >
                     Wyloguj się
-                    </a> */}
+                    </a>
             </Header>
             <TimeboxesManager />
             <CurrentTimebox 
