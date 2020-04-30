@@ -8,7 +8,7 @@ import Timebox from "./Timebox";
 import ReadOnlyTimebox from "./ReadOnlyTimebox";
 import TimeboxEditor from "./TimeboxEditor";
 
-class TimeboxesManager extends React.Component {
+function TimeboxesManager() {
   state = {
     timeboxes: [],
     editIndex: null,
@@ -16,7 +16,7 @@ class TimeboxesManager extends React.Component {
     error: null,
   };
 
-  componentDidMount() {
+  function componentDidMount() {
     TimeboxesAPI.getAllTimeboxes(this.context.accessToken)
       .then((timeboxes) => this.setState({ timeboxes }))
       .catch((error) => this.setState({ error }))
@@ -89,7 +89,7 @@ class TimeboxesManager extends React.Component {
       </>
     );
   };
-  renderReadOnlyTimebox(timebox, index) {
+  function renderReadOnlyTimebox(timebox, index) {
     return (
       <ReadOnlyTimebox
         key={timebox.id}
