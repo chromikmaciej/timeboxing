@@ -26,6 +26,14 @@ function timeboxesReducer(state, action) {
       );
       return { ...state, timeboxes };
     }
+    case "TIMEBOX_REPLACE": {
+      const {indexToUpdate, updatedTimebox} = action;
+      const timeboxes = state.timeboxes.map((timebox, index) => 
+        index === indexToUpdate ? updatedTimebox : timebox
+      );
+      return {...state, timeboxes};
+    }
+    case "TIM"
     case "LOADING_INDICATOR_DISABLE": {
       return { ...state, loading: false };
     }
@@ -70,13 +78,7 @@ function TimeboxesManager() {
   };
   const updateTimebox = (indexToUpdate, timeboxToUpdate) => {
     TimeboxesAPI.replaceTimebox(timeboxToUpdate, accessToken).then(
-      (updatedTimebox) =>
-        dispatch((prevState) => {
-          const timeboxes = prevState.timeboxes.map((timebox, index) =>
-            index === indexToUpdate ? updatedTimebox : timebox
-          );
-          return { timeboxes };
-        })
+      (updatedTimebox) => dispatch({type: "TIMEBOX_REPLACE", indexToUpdate, updatedTimebox})
     );
   };
 
@@ -94,10 +96,10 @@ function TimeboxesManager() {
           <TimeboxEditor
             initialTitle={timebox.title}
             initialTotalTimeInMinutes={timebox.totalTimeInMinutes}
-            onCancel={() => dispatch({ editIndex: null })}
+            onCancel={() => dispatch({ type: "TIMEBOX_EDIT_STOP" })}
             onUpdate={(updatedTimebox) => {
               updateTimebox(index, { ...timebox, ...updatedTimebox });
-              dispatch({ editIndex: null });
+              dispatch({ type: "TIMEBOX_EDIT_STOP" });
             }}
           />
         ) : (
@@ -106,7 +108,7 @@ function TimeboxesManager() {
             title={timebox.title}
             totalTimeInMinutes={timebox.totalTimeInMinutes}
             onDelete={() => removeTimebox(index)}
-            onEdit={() => dispatch({ editIndex: index })}
+            onEdit={() => dispatch({ type: "TIMEBOX_EDIT_START", editIndex: index })}
           />
         )}
       </>
