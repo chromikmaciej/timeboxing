@@ -8,21 +8,35 @@ import Timebox from "./Timebox";
 import ReadOnlyTimebox from "./ReadOnlyTimebox";
 import TimeboxEditor from "./TimeboxEditor";
 
-function useLegacySetState(initialState) {
-  const stateReducer = (prevState, stateChanges) => {
-    let newState = prevState;
-
-    if (typeof stateChanges === "function") {
-      newState = stateChanges(prevState);
-    } else {
-      newState = {
-        ...prevState,
-        ...stateChanges,
-      };
+function timeboxesReducer(state, action) {
+  switch (action.type) {
+    case "TIMEBOXES_LOAD": {
+      const { timeboxes } = action;
+      return { ...state, timeboxes };
     }
-    return newState;
-  };
-  return useReducer(stateReducer, initialState);
+    case "TIMEBOX_ADD": {
+      const { timebox } = action;
+      const timeboxes = [...state.timeboxes, timebox];
+      return { ...state, timeboxes };
+    }
+    case "TIMEBOX_REMOVE": {
+      const { indexToRemove } = action;
+      const timeboxes = state.timeboxes.filter(
+        (timebox, index) => index !== indexToRemove
+      );
+      return { ...state, timeboxes };
+    }
+    case "LOADING_INDICATOR_DISABLE": {
+      return { ...state, loading: false };
+    }
+    case "ERROR_SET": {
+      const { error } = action;
+      return { ...state, error };
+    }
+    default: {
+      return state;
+    }
+  }
 }
 
 function TimeboxesManager() {
@@ -33,41 +47,31 @@ function TimeboxesManager() {
     error: null,
   };
 
-  const [state, setState] = useLegacySetState(initialState);
+  const [state, dispatch] = useReducer(timeboxesReducer, initialState);
   const { accessToken } = useContext(AuthenticationContext);
 
   useEffect(() => {
     TimeboxesAPI.getAllTimeboxes(accessToken)
-      .then((timeboxes) => setState({ timeboxes }))
-      .catch((error) => setState({ error }))
-      .finally(() => setState({ loading: false }));
+      .then((timeboxes) => dispatch({ type: "TIMEBOXES_LOAD", timeboxes }))
+      .catch((error) => dispatch({ type: "ERROR_SET", error }))
+      .finally(() => dispatch({ type: "LOADING_INDICATOR_DISABLE" }));
   }, []);
 
   const addTimebox = (timebox) => {
     TimeboxesAPI.addTimebox(timebox, accessToken).then((addedTimebox) =>
-      setState((prevState) => {
-        const timeboxes = [...prevState.timeboxes, addedTimebox];
-        return { timeboxes };
-      })
+      dispatch({ type: "TIMEBOX_ADD", timebox: addedTimebox })
     );
   };
   const removeTimebox = (indexToRemove) => {
     TimeboxesAPI.removeTimebox(
       state.timeboxes[indexToRemove],
       accessToken
-    ).then(() =>
-      setState((prevState) => {
-        const timeboxes = prevState.timeboxes.filter(
-          (timebox, index) => index !== indexToRemove
-        );
-        return { timeboxes };
-      })
-    );
+    ).then(() => dispatch({ type: "TIMEBOX_REMOVE", indexToRemove }));
   };
   const updateTimebox = (indexToUpdate, timeboxToUpdate) => {
     TimeboxesAPI.replaceTimebox(timeboxToUpdate, accessToken).then(
       (updatedTimebox) =>
-        setState((prevState) => {
+        dispatch((prevState) => {
           const timeboxes = prevState.timeboxes.map((timebox, index) =>
             index === indexToUpdate ? updatedTimebox : timebox
           );
@@ -90,10 +94,10 @@ function TimeboxesManager() {
           <TimeboxEditor
             initialTitle={timebox.title}
             initialTotalTimeInMinutes={timebox.totalTimeInMinutes}
-            onCancel={() => setState({ editIndex: null })}
+            onCancel={() => dispatch({ editIndex: null })}
             onUpdate={(updatedTimebox) => {
               updateTimebox(index, { ...timebox, ...updatedTimebox });
-              setState({ editIndex: null });
+              dispatch({ editIndex: null });
             }}
           />
         ) : (
@@ -102,7 +106,7 @@ function TimeboxesManager() {
             title={timebox.title}
             totalTimeInMinutes={timebox.totalTimeInMinutes}
             onDelete={() => removeTimebox(index)}
-            onEdit={() => setState({ editIndex: index })}
+            onEdit={() => dispatch({ editIndex: index })}
           />
         )}
       </>
