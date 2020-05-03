@@ -8,6 +8,13 @@ import Timebox from "./Timebox";
 import ReadOnlyTimebox from "./ReadOnlyTimebox";
 import TimeboxEditor from "./TimeboxEditor";
 
+const initialState = {
+    timeboxes: [],
+    editIndex: null,
+    loading: true,
+    error: null,
+  };
+
 function timeboxesReducer(state, action) {
   switch (action.type) {
     case "TIMEBOXES_LOAD": {
@@ -20,20 +27,26 @@ function timeboxesReducer(state, action) {
       return { ...state, timeboxes };
     }
     case "TIMEBOX_REMOVE": {
-      const { indexToRemove } = action;
+      const { removedTimebox } = action;
       const timeboxes = state.timeboxes.filter(
-        (timebox, index) => index !== indexToRemove
+        (timebox) => timebox.id !== removedTimebox.id
       );
       return { ...state, timeboxes };
     }
     case "TIMEBOX_REPLACE": {
-      const {indexToUpdate, updatedTimebox} = action;
-      const timeboxes = state.timeboxes.map((timebox, index) => 
-        index === indexToUpdate ? updatedTimebox : timebox
+      const {replacedTimebox} = action;
+      const timeboxes = state.timeboxes.map((timebox) => 
+        timebox.id === replacedTimebox.id ? replacedTimebox : timebox
       );
       return {...state, timeboxes};
     }
-    case "TIM"
+    case "TIMEBOX_EDIT_STOP": {
+      return {...state, editIndex: null};
+    }
+    case "TIMEBOX_EDIT_START": {
+      const {editIndex} = action;
+      return {...state, editIndex};
+    }
     case "LOADING_INDICATOR_DISABLE": {
       return { ...state, loading: false };
     }
@@ -48,12 +61,7 @@ function timeboxesReducer(state, action) {
 }
 
 function TimeboxesManager() {
-  const initialState = {
-    timeboxes: [],
-    editIndex: null,
-    loading: true,
-    error: null,
-  };
+  
 
   const [state, dispatch] = useReducer(timeboxesReducer, initialState);
   const { accessToken } = useContext(AuthenticationContext);
@@ -74,11 +82,11 @@ function TimeboxesManager() {
     TimeboxesAPI.removeTimebox(
       state.timeboxes[indexToRemove],
       accessToken
-    ).then(() => dispatch({ type: "TIMEBOX_REMOVE", indexToRemove }));
+    ).then(() => dispatch({ type: "TIMEBOX_REMOVE", removedTimebox: state.timeboxes[indexToRemove] }));
   };
   const updateTimebox = (indexToUpdate, timeboxToUpdate) => {
     TimeboxesAPI.replaceTimebox(timeboxToUpdate, accessToken).then(
-      (updatedTimebox) => dispatch({type: "TIMEBOX_REPLACE", indexToUpdate, updatedTimebox})
+      (replacedTimebox) => dispatch({type: "TIMEBOX_REPLACE", replacedTimebox})
     );
   };
 
