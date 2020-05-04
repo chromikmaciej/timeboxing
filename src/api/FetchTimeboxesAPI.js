@@ -31,9 +31,16 @@ const FetchTimeboxesAPI = {
     return replacedTimebox;
   },
   removeTimebox: async function (timeboxToRemove, accessToken) {
+    console.log("usuwam ___" + timeboxToRemove.id);
     if (!timeboxToRemove.id) {
       throw new Error("Timebox has to have an id to be updated");
     }
+    await makeRequest(
+      `${BASE_URL}/${timeboxToRemove.id}`,
+      "DELETE",
+      null,
+      accessToken
+    );
     // możemy nic nie zwracać
     //const response = await makeRequest(`${BASE_URL}/${timeboxToRemove.id}`, "DELETE", null, accessToken);
   },

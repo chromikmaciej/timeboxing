@@ -1,14 +1,14 @@
 const initialState = {
-    timeboxes: [],
-    editIndex: null,
-    loading: true,
-    error: null,
-  };
+  timeboxes: [],
+  editIndex: null,
+  loading: true,
+  error: null,
+};
 
 export function timeboxesReducer(state = initialState, action = {}) {
-    if (typeof state === "undefined") {
-        return initialState;
-    }
+  if (typeof state === "undefined") {
+    return initialState;
+  }
 
   switch (action.type) {
     case "TIMEBOXES_SET": {
@@ -28,18 +28,18 @@ export function timeboxesReducer(state = initialState, action = {}) {
       return { ...state, timeboxes };
     }
     case "TIMEBOX_REPLACE": {
-      const {replacedTimebox} = action;
-      const timeboxes = state.timeboxes.map((timebox) => 
+      const { replacedTimebox } = action;
+      const timeboxes = state.timeboxes.map((timebox) =>
         timebox.id === replacedTimebox.id ? replacedTimebox : timebox
       );
-      return {...state, timeboxes};
+      return { ...state, timeboxes };
     }
     case "TIMEBOX_EDIT_STOP": {
-      return {...state, currentlyEditedTimeboxId: null};
+      return { ...state, currentlyEditedTimeboxId: null };
     }
     case "TIMEBOX_EDIT_START": {
-      const {currentlyEditedTimeboxId} = action;
-      return {...state, currentlyEditedTimeboxId};
+      const { currentlyEditedTimeboxId } = action;
+      return { ...state, currentlyEditedTimeboxId };
     }
     case "LOADING_INDICATOR_DISABLE": {
       return { ...state, loading: false };

@@ -9,14 +9,21 @@ import ReadOnlyTimebox from "./ReadOnlyTimebox";
 import TimeboxEditor from "./TimeboxEditor";
 import { timeboxesReducer } from "../reduceres";
 
-function TimeboxesManager() {
+function setTimeboxes(timeboxes) {
+  return { type: "TIMEBOXES_SET", timeboxes };
+}
 
-  const [state, dispatch] = useReducer(timeboxesReducer, undefined, timeboxesReducer);
+function TimeboxesManager() {
+  const [state, dispatch] = useReducer(
+    timeboxesReducer,
+    undefined,
+    timeboxesReducer
+  );
   const { accessToken } = useContext(AuthenticationContext);
 
   useEffect(() => {
     TimeboxesAPI.getAllTimeboxes(accessToken)
-      .then((timeboxes) => dispatch({ type: "TIMEBOXES_SET", timeboxes }))
+      .then((timeboxes) => dispatch(setTimeboxes(timeboxes)))
       .catch((error) => dispatch({ type: "ERROR_SET", error }))
       .finally(() => dispatch({ type: "LOADING_INDICATOR_DISABLE" }));
   }, []);
@@ -27,14 +34,16 @@ function TimeboxesManager() {
     );
   };
   const removeTimebox = (timeboxToRemove) => {
-    TimeboxesAPI.removeTimebox(
-      timeboxToRemove,
-      accessToken
-    ).then(() => dispatch({ type: "TIMEBOX_REMOVE", removedTimebox: timeboxToRemove }));
+    TimeboxesAPI.removeTimebox(timeboxToRemove, accessToken).then(() =>
+      dispatch({ type: "TIMEBOX_REMOVE", removedTimebox: timeboxToRemove })
+    );
   };
-  const updateTimebox = ( timeboxToUpdate) => {
-    TimeboxesAPI.replaceTimebox(timeboxToUpdate, accessToken).then(
-      (replacedTimebox) => dispatch({type: "TIMEBOX_REPLACE", replacedTimebox})
+  const updateTimebox = (timeboxToUpdate) => {
+    TimeboxesAPI.replaceTimebox(
+      timeboxToUpdate,
+      accessToken
+    ).then((replacedTimebox) =>
+      dispatch({ type: "TIMEBOX_REPLACE", replacedTimebox })
     );
   };
 
@@ -64,7 +73,12 @@ function TimeboxesManager() {
             title={timebox.title}
             totalTimeInMinutes={timebox.totalTimeInMinutes}
             onDelete={() => removeTimebox(timebox)}
-            onEdit={() => dispatch({ type: "TIMEBOX_EDIT_START", currentlyEditedTimeboxId: timebox.id })}
+            onEdit={() =>
+              dispatch({
+                type: "TIMEBOX_EDIT_START",
+                currentlyEditedTimeboxId: timebox.id,
+              })
+            }
           />
         )}
       </>
