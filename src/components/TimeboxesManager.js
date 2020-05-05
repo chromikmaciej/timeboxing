@@ -12,6 +12,9 @@ import { timeboxesReducer } from "../reduceres";
 function setTimeboxes(timeboxes) {
   return { type: "TIMEBOXES_SET", timeboxes };
 }
+const addTimebox = timebox => ({type: "TIMEBOX_ADD", timebox});
+const setError = error => ({ type: "ERROR_SET", error});
+const disableLoadingIndicator = () => ({type: "LOADING_INDICATOR_DISABLE"});
 
 function TimeboxesManager() {
   const [state, dispatch] = useReducer(
@@ -24,32 +27,15 @@ function TimeboxesManager() {
   useEffect(() => {
     TimeboxesAPI.getAllTimeboxes(accessToken)
       .then((timeboxes) => dispatch(setTimeboxes(timeboxes)))
-      .catch((error) => dispatch({ type: "ERROR_SET", error }))
-      .finally(() => dispatch({ type: "LOADING_INDICATOR_DISABLE" }));
+      .catch((error) => dispatch(setError(error)))
+      .finally(() => dispatch(disableLoadingIndicator()));
   }, []);
-
-  const addTimebox = (timebox) => {
-    TimeboxesAPI.addTimebox(timebox, accessToken).then((addedTimebox) =>
-      dispatch({ type: "TIMEBOX_ADD", timebox: addedTimebox })
-    );
-  };
-  const removeTimebox = (timeboxToRemove) => {
-    TimeboxesAPI.removeTimebox(timeboxToRemove, accessToken).then(() =>
-      dispatch({ type: "TIMEBOX_REMOVE", removedTimebox: timeboxToRemove })
-    );
-  };
-  const updateTimebox = (timeboxToUpdate) => {
-    TimeboxesAPI.replaceTimebox(
-      timeboxToUpdate,
-      accessToken
-    ).then((replacedTimebox) =>
-      dispatch({ type: "TIMEBOX_REPLACE", replacedTimebox })
-    );
-  };
 
   const handleCreate = (createdTimebox) => {
     try {
-      addTimebox(createdTimebox);
+      TimeboxesAPI.addTimebox(createdTimebox, accessToken).then((addedTimebox) =>
+      dispatch(addTimebox(addedTimebox))
+    );
     } catch (error) {
       console.log("Jest błąd przy tworzeniu timeboxa:", error);
     }
@@ -63,7 +49,13 @@ function TimeboxesManager() {
             initialTotalTimeInMinutes={timebox.totalTimeInMinutes}
             onCancel={() => dispatch({ type: "TIMEBOX_EDIT_STOP" })}
             onUpdate={(updatedTimebox) => {
-              updateTimebox({ ...timebox, ...updatedTimebox });
+              const timeboxToUpdate = { ...timebox, ...updatedTimebox };
+              TimeboxesAPI.replaceTimebox(
+                timeboxToUpdate,
+                accessToken
+              ).then((replacedTimebox) =>
+                dispatch({ type: "TIMEBOX_REPLACE", replacedTimebox })
+              );
               dispatch({ type: "TIMEBOX_EDIT_STOP" });
             }}
           />
@@ -72,7 +64,11 @@ function TimeboxesManager() {
             key={timebox.id}
             title={timebox.title}
             totalTimeInMinutes={timebox.totalTimeInMinutes}
-            onDelete={() => removeTimebox(timebox)}
+            onDelete={() => 
+              TimeboxesAPI.removeTimebox(timebox, accessToken).then(() =>
+                dispatch({ type: "TIMEBOX_REMOVE", removedTimebox: timebox })
+              )
+            }
             onEdit={() =>
               dispatch({
                 type: "TIMEBOX_EDIT_START",
