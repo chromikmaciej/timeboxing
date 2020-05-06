@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useReducer } from "react";
+import React, { useEffect, useContext, useReducer, useState } from "react";
 
 import TimeboxCreator from "./TimeboxCreator";
 import TimeboxesAPI from "../api/FetchTimeboxesAPI";
@@ -7,7 +7,7 @@ import { TimeboxesList } from "./TimeboxesList";
 import Timebox from "./Timebox";
 import ReadOnlyTimebox from "./ReadOnlyTimebox";
 import TimeboxEditor from "./TimeboxEditor";
-import { timeboxesReducer } from "../reduceres";
+import { timeboxesReducer, isTimeboxEdited, areTimeboxesLoading, getTimeboxesLoadingError, getAllTimeboxes } from "../reduceres";
 import {
   setTimeboxes,
   setError,
@@ -19,19 +19,32 @@ import {
   startEditingTimebox,
 } from "../actions";
 
+import { createStore } from "redux";
+
+const store = createStore(timeboxesReducer);
+
+function useForceUpdate() {
+  const [updateCounter, setUpdateCounter] = useState(0);
+  function forceUpdate() {
+    setUpdateCounter(prevCounter => prevCounter + 1);
+  }
+  return forceUpdate;
+}
+
 function TimeboxesManager() {
-  const [state, dispatch] = useReducer(
-    timeboxesReducer,
-    undefined,
-    timeboxesReducer
-  );
+  const forceUpdate = useForceUpdate();
+  const state = store.getState();
+  const dispatch = store.dispatch;
+
+  useEffect(() => store.subscribe(forceUpdate), []);
+
   const { accessToken } = useContext(AuthenticationContext);
 
   useEffect(() => {
     TimeboxesAPI.getAllTimeboxes(accessToken)
       .then((timeboxes) => dispatch(setTimeboxes(timeboxes)))
       .catch((error) => dispatch(setError(error)))
-      .finally(() => dispatch(disableLoadingIndicator()));
+      .finally(() => dispatch(disableLoadingIndicator()))
   }, []);
 
   const handleCreate = (createdTimebox) => {
@@ -47,7 +60,7 @@ function TimeboxesManager() {
   const renderTimebox = (timebox) => {
     return (
       <>
-        {state.currentlyEditedTimeboxId === timebox.id ? (
+        {isTimeboxEdited(state, timebox) ? (
           <TimeboxEditor
             initialTitle={timebox.title}
             initialTotalTimeInMinutes={timebox.totalTimeInMinutes}
@@ -91,10 +104,10 @@ function TimeboxesManager() {
   return (
     <>
       <TimeboxCreator onCreate={handleCreate} />
-      {state.loading ? "Timeboxy się ładują..." : null}
-      {state.error ? "Nie udało się załadować :(" : null}
+      {areTimeboxesLoading(state) ? "Timeboxy się ładują..." : null}
+      {getTimeboxesLoadingError(state) ? "Nie udało się załadować :(" : null}
       <TimeboxesList
-        timeboxes={state.timeboxes}
+        timeboxes={getAllTimeboxes(state)}
         renderTimebox={renderTimebox}
       />
     </>
