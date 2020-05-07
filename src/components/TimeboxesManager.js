@@ -4,10 +4,12 @@ import TimeboxCreator from "./TimeboxCreator";
 import TimeboxesAPI from "../api/FetchTimeboxesAPI";
 import AuthenticationContext from "../contexts/AuthenticationContext";
 import { AllTimeboxesList } from "./TimeboxesList";
-import Timebox from "./Timebox";
 import ReadOnlyTimebox from "./ReadOnlyTimebox";
-import TimeboxEditor from "./TimeboxEditor";
-import { isTimeboxEdited, areTimeboxesLoading, getTimeboxesLoadingError } from "../reduceres";
+import {
+  isTimeboxEdited,
+  areTimeboxesLoading,
+  getTimeboxesLoadingError,
+} from "../reduceres";
 import {
   setTimeboxes,
   setError,
@@ -18,11 +20,12 @@ import {
   stopEditingTimebox,
   startEditingTimebox,
 } from "../actions";
+import { EditableTimebox } from "./EditableTimebox.1";
 
 export function useForceUpdate() {
   const [updateCounter, setUpdateCounter] = useState(0);
   function forceUpdate() {
-    setUpdateCounter(prevCounter => prevCounter + 1);
+    setUpdateCounter((prevCounter) => prevCounter + 1);
   }
   return forceUpdate;
 }
@@ -41,7 +44,7 @@ function TimeboxesManager() {
     TimeboxesAPI.getAllTimeboxes(accessToken)
       .then((timeboxes) => dispatch(setTimeboxes(timeboxes)))
       .catch((error) => dispatch(setError(error)))
-      .finally(() => dispatch(disableLoadingIndicator()))
+      .finally(() => dispatch(disableLoadingIndicator()));
   }, []);
 
   const handleCreate = (createdTimebox) => {
@@ -55,38 +58,25 @@ function TimeboxesManager() {
     }
   };
   const renderTimebox = (timebox) => {
+    const onUpdate = (updatedTimebox) => {
+      const timeboxToUpdate = { ...timebox, ...updatedTimebox };
+      TimeboxesAPI.replaceTimebox(
+        timeboxToUpdate,
+        accessToken
+      ).then((replacedTimebox) => dispatch(replaceTimebox(replacedTimebox)));
+      dispatch(stopEditingTimebox());
+    };
+    const onDelete = () =>
+      TimeboxesAPI.removeTimebox(timebox, accessToken).then(() =>
+        dispatch(removeTimebox(timebox))
+      );
+
     return (
-      <>
-        {isTimeboxEdited(state, timebox) ? (
-          <TimeboxEditor
-            initialTitle={timebox.title}
-            initialTotalTimeInMinutes={timebox.totalTimeInMinutes}
-            onCancel={() => dispatch(stopEditingTimebox())}
-            onUpdate={(updatedTimebox) => {
-              const timeboxToUpdate = { ...timebox, ...updatedTimebox };
-              TimeboxesAPI.replaceTimebox(
-                timeboxToUpdate,
-                accessToken
-              ).then((replacedTimebox) =>
-                dispatch(replaceTimebox(replacedTimebox))
-              );
-              dispatch(stopEditingTimebox());
-            }}
-          />
-        ) : (
-          <Timebox
-            key={timebox.id}
-            title={timebox.title}
-            totalTimeInMinutes={timebox.totalTimeInMinutes}
-            onDelete={() =>
-              TimeboxesAPI.removeTimebox(timebox, accessToken).then(() =>
-                dispatch(removeTimebox(timebox))
-              )
-            }
-            onEdit={() => dispatch(startEditingTimebox(timebox.id))}
-          />
-        )}
-      </>
+      <EditableTimebox
+        timebox={timebox}
+        onUpdate={onUpdate}
+        onDelete={onDelete}
+      />
     );
   };
   function renderReadOnlyTimebox(timebox, index) {
@@ -103,9 +93,7 @@ function TimeboxesManager() {
       <TimeboxCreator onCreate={handleCreate} />
       {areTimeboxesLoading(state) ? "Timeboxy się ładują..." : null}
       {getTimeboxesLoadingError(state) ? "Nie udało się załadować :(" : null}
-      <AllTimeboxesList
-        renderTimebox={renderTimebox}
-      />
+      <AllTimeboxesList renderTimebox={renderTimebox} />
     </>
   );
 }
