@@ -3,11 +3,11 @@ import { useStore } from "react-redux";
 import TimeboxCreator from "./TimeboxCreator";
 import TimeboxesAPI from "../api/FetchTimeboxesAPI";
 import AuthenticationContext from "../contexts/AuthenticationContext";
-import { TimeboxesList } from "./TimeboxesList";
+import { AllTimeboxesList } from "./TimeboxesList";
 import Timebox from "./Timebox";
 import ReadOnlyTimebox from "./ReadOnlyTimebox";
 import TimeboxEditor from "./TimeboxEditor";
-import { isTimeboxEdited, areTimeboxesLoading, getTimeboxesLoadingError, getAllTimeboxes } from "../reduceres";
+import { isTimeboxEdited, areTimeboxesLoading, getTimeboxesLoadingError } from "../reduceres";
 import {
   setTimeboxes,
   setError,
@@ -19,7 +19,7 @@ import {
   startEditingTimebox,
 } from "../actions";
 
-function useForceUpdate() {
+export function useForceUpdate() {
   const [updateCounter, setUpdateCounter] = useState(0);
   function forceUpdate() {
     setUpdateCounter(prevCounter => prevCounter + 1);
@@ -103,8 +103,7 @@ function TimeboxesManager() {
       <TimeboxCreator onCreate={handleCreate} />
       {areTimeboxesLoading(state) ? "Timeboxy się ładują..." : null}
       {getTimeboxesLoadingError(state) ? "Nie udało się załadować :(" : null}
-      <TimeboxesList
-        timeboxes={getAllTimeboxes(state)}
+      <AllTimeboxesList
         renderTimebox={renderTimebox}
       />
     </>
