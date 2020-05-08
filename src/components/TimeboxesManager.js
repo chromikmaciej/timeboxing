@@ -1,12 +1,11 @@
 import React, { useEffect, useContext, useReducer, useState } from "react";
-import { useStore } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import TimeboxCreator from "./TimeboxCreator";
 import TimeboxesAPI from "../api/FetchTimeboxesAPI";
 import AuthenticationContext from "../contexts/AuthenticationContext";
 import { AllTimeboxesList } from "./TimeboxesList";
 import ReadOnlyTimebox from "./ReadOnlyTimebox";
 import {
-  isTimeboxEdited,
   areTimeboxesLoading,
   getTimeboxesLoadingError,
 } from "../reduceres";
@@ -18,27 +17,16 @@ import {
   replaceTimebox,
   removeTimebox,
   stopEditingTimebox,
-  startEditingTimebox,
 } from "../actions";
 import { EditableTimebox } from "./EditableTimebox.1";
 
-export function useForceUpdate() {
-  const [updateCounter, setUpdateCounter] = useState(0);
-  function forceUpdate() {
-    setUpdateCounter((prevCounter) => prevCounter + 1);
-  }
-  return forceUpdate;
-}
-
 function TimeboxesManager() {
-  const store = useStore();
-  const forceUpdate = useForceUpdate();
-  const state = store.getState();
-  const dispatch = store.dispatch;
-
-  useEffect(() => store.subscribe(forceUpdate), []);
+  const dispatch = useDispatch()
 
   const { accessToken } = useContext(AuthenticationContext);
+
+  const timeboxesLoading = useSelector(state => areTimeboxesLoading(state) );
+  const timeboxesLoadingError = useSelector(state => getTimeboxesLoadingError(state) );
 
   useEffect(() => {
     TimeboxesAPI.getAllTimeboxes(accessToken)
@@ -91,8 +79,8 @@ function TimeboxesManager() {
   return (
     <>
       <TimeboxCreator onCreate={handleCreate} />
-      {areTimeboxesLoading(state) ? "Timeboxy się ładują..." : null}
-      {getTimeboxesLoadingError(state) ? "Nie udało się załadować :(" : null}
+      {timeboxesLoading ? "Timeboxy się ładują..." : null}
+      {timeboxesLoadingError ? "Nie udało się załadować :(" : null}
       <AllTimeboxesList renderTimebox={renderTimebox} />
     </>
   );
