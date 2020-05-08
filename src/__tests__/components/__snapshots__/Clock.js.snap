@@ -2,14 +2,12 @@
 
 exports[`<Clock /> when given minutes and seconds (TestRenderer) renders properly 1`] = `
 <h2
-  className="Clock "
+  className="Clock  "
+  style={Object {}}
 >
   Pozostało 
-  :
   10
   :
   20
-  .
-  010
 </h2>
 `;
