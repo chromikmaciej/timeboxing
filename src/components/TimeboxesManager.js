@@ -10,12 +10,10 @@ import {
   getTimeboxesLoadingError,
 } from "../reduceres";
 import {
-  setTimeboxes,
-  setError,
-  disableLoadingIndicator,
+  fetchAllTimeboxes,
   addTimebox,
   replaceTimebox,
-  removeTimebox,
+  removeTimeboxRemotely,
   stopEditingTimebox,
 } from "../actions";
 import { EditableTimebox } from "./EditableTimebox.1";
@@ -29,10 +27,7 @@ function TimeboxesManager() {
   const timeboxesLoadingError = useSelector(state => getTimeboxesLoadingError(state) );
 
   useEffect(() => {
-    TimeboxesAPI.getAllTimeboxes(accessToken)
-      .then((timeboxes) => dispatch(setTimeboxes(timeboxes)))
-      .catch((error) => dispatch(setError(error)))
-      .finally(() => dispatch(disableLoadingIndicator()));
+    dispatch(fetchAllTimeboxes(accessToken))
   }, []);
 
   const handleCreate = (createdTimebox) => {
@@ -54,10 +49,7 @@ function TimeboxesManager() {
       ).then((replacedTimebox) => dispatch(replaceTimebox(replacedTimebox)));
       dispatch(stopEditingTimebox());
     };
-    const onDelete = () =>
-      TimeboxesAPI.removeTimebox(timebox, accessToken).then(() =>
-        dispatch(removeTimebox(timebox))
-      );
+    const onDelete = () => dispatch(removeTimeboxRemotely(timebox, accessToken));
 
     return (
       <EditableTimebox

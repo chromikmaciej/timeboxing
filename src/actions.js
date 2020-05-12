@@ -1,3 +1,5 @@
+import TimeboxesAPI from "./api/FetchTimeboxesAPI";
+
 export const setTimeboxes = (timeboxes) => ({
   type: "TIMEBOXES_SET",
   timeboxes,
@@ -20,3 +22,21 @@ export const startEditingTimebox = (currentlyEditedTimeboxId) => ({
   type: "TIMEBOX_EDIT_START",
   currentlyEditedTimeboxId,
 });
+
+export const fetchAllTimeboxes = (accessToken) => (dispatch) => {
+  TimeboxesAPI.getAllTimeboxes(accessToken).then(
+    (timeboxes) => dispatch(setTimeboxes(timeboxes))
+  ).catch(
+    (error) => dispatch(setError(error))
+  ).finally(
+    () => dispatch(disableLoadingIndicator())
+  )
+}
+
+export const removeTimeboxRemotely = (timebox, accessToken) => (dispatch) => {
+  TimeboxesAPI.removeTimebox(timebox, accessToken)
+    .then(
+      () => dispatch(removeTimebox(timebox))
+    );
+}
+
