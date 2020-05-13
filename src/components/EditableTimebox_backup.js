@@ -41,6 +41,7 @@ class EditableTimebox extends React.Component {
               title={title}
               totalTimeInMinutes={totalTimeInMinutes}
               onEdit={this.handleEdit}
+              onMakeCurrent={onMakeCurrent}
             />
           )}
         </React.StrictMode>

@@ -22,6 +22,9 @@ export const startEditingTimebox = (currentlyEditedTimeboxId) => ({
   type: "TIMEBOX_EDIT_START",
   currentlyEditedTimeboxId,
 });
+export const makeTimeboxCurrent = (timebox) => {
+  return { type: "TIMEBOX_MAKE_CURRENT", timebox };
+}
 
 export const fetchAllTimeboxes = (accessToken) => (dispatch) => {
   TimeboxesAPI.getAllTimeboxes(accessToken).then(

@@ -16,7 +16,7 @@ import {
   removeTimeboxRemotely,
   stopEditingTimebox,
 } from "../actions";
-import { EditableTimebox } from "./EditableTimebox.1";
+import { EditableTimebox } from "./EditableTimebox1.";
 
 function TimeboxesManager() {
   const dispatch = useDispatch()
