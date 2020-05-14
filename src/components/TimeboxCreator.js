@@ -31,6 +31,7 @@ class TimeboxCreator extends React.Component {
                     <input 
                         ref={this.totalTimeInMinutesInput}
                         type="number" 
+                        step="0.01"
                     />
                 </label><br />
                 <button 

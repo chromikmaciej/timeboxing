@@ -1,4 +1,5 @@
 import TimeboxesAPI from "./api/FetchTimeboxesAPI";
+import { isAnyTimeboxCurrent, getCurrentTimebox } from "./reduceres";
 
 export const setTimeboxes = (timeboxes) => ({
   type: "TIMEBOXES_SET",
@@ -24,6 +25,12 @@ export const startEditingTimebox = (currentlyEditedTimeboxId) => ({
 });
 export const makeTimeboxCurrent = (timebox) => {
   return { type: "TIMEBOX_MAKE_CURRENT", timebox };
+}
+
+export const finishCurrentTimebox = () => (dispatch, getState) =>  {
+  if(isAnyTimeboxCurrent(getState())) {
+    dispatch(removeTimebox(getCurrentTimebox(getState())));
+  }
 }
 
 export const fetchAllTimeboxes = (accessToken) => (dispatch) => {
