@@ -7,12 +7,12 @@ import "./styles/main.scss";
 import thunk from "redux-thunk";
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
-import { timeboxesReducer } from "./reduceres";
+import { oldReducer } from "./reduceres";
 
 import { composeWithDevTools } from "redux-devtools-extension";
 
 
-const store = createStore(timeboxesReducer , composeWithDevTools(applyMiddleware(thunk)));
+const store = createStore(oldReducer , composeWithDevTools(applyMiddleware(thunk)));
 
 ReactDOM.render(
     <Provider store={ store }>
