@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import Timebox from "./Timebox";
 import TimeboxEditor from "./TimeboxEditor";
-import { isTimeboxEdited } from "../reduceres";
+import { isTimeboxEdited } from "../reducers";
 import { startEditingTimebox, stopEditingTimebox, makeTimeboxCurrent } from "../actions";
 
 const mapStateToProps = (state, ownProps) => ({

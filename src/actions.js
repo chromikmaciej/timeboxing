@@ -1,5 +1,5 @@
 import TimeboxesAPI from "./api/FetchTimeboxesAPI";
-import { isAnyTimeboxCurrent, getCurrentTimebox } from "./reduceres";
+import { isAnyTimeboxCurrent, getCurrentTimebox } from "./reducers";
 
 export const setTimeboxes = (timeboxes) => ({
   type: "TIMEBOXES_SET",

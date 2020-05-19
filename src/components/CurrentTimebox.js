@@ -2,7 +2,7 @@ import React from "react";
 import Clock from "./Clock";
 import ProgressBar from "./ProgressBar";
 import { getMinutesAndSecondsFromDurationInSeconds } from "../lib/time";
-import { getCurrentTimebox } from "../reduceres";
+import { getCurrentTimebox } from "../reducers";
 import { finishCurrentTimebox } from "../actions";
 import { connect } from "react-redux";
 

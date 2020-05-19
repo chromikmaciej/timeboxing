@@ -8,7 +8,7 @@ import ReadOnlyTimebox from "./ReadOnlyTimebox";
 import {
   areTimeboxesLoading,
   getTimeboxesLoadingError,
-} from "../reduceres";
+} from "../reducers";
 import {
   fetchAllTimeboxes,
   addTimebox,

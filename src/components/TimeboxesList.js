@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { getAllTimeboxes, getRemainingTimebosex } from "../reduceres";
+import { getAllTimeboxes, getRemainingTimebosex } from "../reducers";
 import { connect } from "react-redux"; 
  
 export function TimeboxesList({ timeboxes, renderTimebox }) {
