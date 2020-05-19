@@ -1,4 +1,4 @@
-import TimeboxesAPI from "./api/FetchTimeboxesAPI";
+import TimeboxesAPI from "./api/FakeTimeboxesAPI";
 import { isAnyTimeboxCurrent, getCurrentTimebox } from "./reducers";
 
 export const setTimeboxes = (timeboxes) => ({
@@ -25,28 +25,23 @@ export const startEditingTimebox = (currentlyEditedTimeboxId) => ({
 });
 export const makeTimeboxCurrent = (timebox) => {
   return { type: "TIMEBOX_MAKE_CURRENT", timebox };
-}
+};
 
-export const finishCurrentTimebox = () => (dispatch, getState) =>  {
-  if(isAnyTimeboxCurrent(getState())) {
+export const finishCurrentTimebox = () => (dispatch, getState) => {
+  if (isAnyTimeboxCurrent(getState())) {
     dispatch(removeTimebox(getCurrentTimebox(getState())));
   }
-}
+};
 
 export const fetchAllTimeboxes = (accessToken) => (dispatch) => {
-  TimeboxesAPI.getAllTimeboxes(accessToken).then(
-    (timeboxes) => dispatch(setTimeboxes(timeboxes))
-  ).catch(
-    (error) => dispatch(setError(error))
-  ).finally(
-    () => dispatch(disableLoadingIndicator())
-  )
-}
+  TimeboxesAPI.getAllTimeboxes(accessToken)
+    .then((timeboxes) => dispatch(setTimeboxes(timeboxes)))
+    .catch((error) => dispatch(setError(error)))
+    .finally(() => dispatch(disableLoadingIndicator()));
+};
 
 export const removeTimeboxRemotely = (timebox, accessToken) => (dispatch) => {
-  TimeboxesAPI.removeTimebox(timebox, accessToken)
-    .then(
-      () => dispatch(removeTimebox(timebox))
-    );
-}
-
+  TimeboxesAPI.removeTimebox(timebox, accessToken).then(() =>
+    dispatch(removeTimebox(timebox))
+  );
+};

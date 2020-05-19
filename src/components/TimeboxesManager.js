@@ -1,14 +1,11 @@
 import React, { useEffect, useContext, useReducer, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TimeboxCreator from "./TimeboxCreator";
-import TimeboxesAPI from "../api/FetchTimeboxesAPI";
+import TimeboxesAPI from "../api/FakeTimeboxesAPI";
 import AuthenticationContext from "../contexts/AuthenticationContext";
 import { RemainingTimeboxesList } from "./TimeboxesList";
 import ReadOnlyTimebox from "./ReadOnlyTimebox";
-import {
-  areTimeboxesLoading,
-  getTimeboxesLoadingError,
-} from "../reducers";
+import { areTimeboxesLoading, getTimeboxesLoadingError } from "../reducers";
 import {
   fetchAllTimeboxes,
   addTimebox,
@@ -19,15 +16,17 @@ import {
 import { EditableTimebox } from "./EditableTimebox1.";
 
 function TimeboxesManager() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const { accessToken } = useContext(AuthenticationContext);
 
-  const timeboxesLoading = useSelector(state => areTimeboxesLoading(state) );
-  const timeboxesLoadingError = useSelector(state => getTimeboxesLoadingError(state) );
+  const timeboxesLoading = useSelector((state) => areTimeboxesLoading(state));
+  const timeboxesLoadingError = useSelector((state) =>
+    getTimeboxesLoadingError(state)
+  );
 
   useEffect(() => {
-    dispatch(fetchAllTimeboxes(accessToken))
+    dispatch(fetchAllTimeboxes(accessToken));
   }, []);
 
   const handleCreate = (createdTimebox) => {
@@ -49,7 +48,8 @@ function TimeboxesManager() {
       ).then((replacedTimebox) => dispatch(replaceTimebox(replacedTimebox)));
       dispatch(stopEditingTimebox());
     };
-    const onDelete = () => dispatch(removeTimeboxRemotely(timebox, accessToken));
+    const onDelete = () =>
+      dispatch(removeTimeboxRemotely(timebox, accessToken));
 
     return (
       <EditableTimebox

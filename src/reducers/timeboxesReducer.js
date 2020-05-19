@@ -11,12 +11,16 @@ export default function timeboxesReducer(state = [], action) {
     }
     case "TIMEBOX_REMOVE": {
       const { removedTimebox } = action;
-      const timeboxes = state.filter((timebox) => timebox.id !== removedTimebox.id);
+      const timeboxes = state.filter(
+        (timebox) => timebox.id !== removedTimebox.id
+      );
       return timeboxes;
     }
     case "TIMEBOX_REPLACE": {
       const { replacedTimebox } = action;
-      const timeboxes = state.map((timebox) => timebox.id === replacedTimebox.id ? replacedTimebox : timebox);
+      const timeboxes = state.map((timebox) =>
+        timebox.id === replacedTimebox.id ? replacedTimebox : timebox
+      );
       return timeboxes;
     }
     default: {
@@ -26,5 +30,7 @@ export default function timeboxesReducer(state = [], action) {
 }
 
 export const getAllTimeboxes = (state) => state;
-export const getRemainingTimebosex = (state) => state.filter(timebox => timebox.id !== state.currentTimeboxId);
-export const getTimeboxById = (state, timeboxId) => state.find(timebox => timebox.id === timeboxId);
+export const getRemainingTimebosex = (state) =>
+  state.filter((timebox) => timebox.id !== state.currentTimeboxId);
+export const getTimeboxById = (state, timeboxId) =>
+  state.find((timebox) => timebox.id === timeboxId);
