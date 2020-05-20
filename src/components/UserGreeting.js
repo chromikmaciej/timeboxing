@@ -17,5 +17,6 @@ export default UserGreeting;
 
 function getUserEmail(accessToken) {
     const decodedToken = jwt.decode(accessToken);
-    return decodedToken.email;
+    //return decodedToken.email;
+    return "bob@example.com";
 }

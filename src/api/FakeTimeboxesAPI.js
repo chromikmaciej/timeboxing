@@ -1,10 +1,5 @@
 import uuid from "uuid";
-
-function wait(ms = 1000) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
+import { wait } from "./wait";
 
 const timeboxes = [
   { id: "1", title: "Uczę się o promises", totalTimeInMinutes: 25 },
@@ -14,7 +9,7 @@ const timeboxes = [
 ];
 
 function findIndexByAnId(id) {
-  const result = timeboxes.findIndex((timebox) => timebox.id == id);
+  const result = timeboxes.findIndex((timebox) => timebox.id === id);
   if (result < 0) {
     throw new Error("Timebox o podanym id nie istnieje");
   }

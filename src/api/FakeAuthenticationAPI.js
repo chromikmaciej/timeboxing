@@ -1,16 +1,16 @@
-import makeRequest from "./makeFetchRequest";
+import { wait } from "./wait";
 
-const BASE_URL = "http://localhost:4000";
-const FetchAuthenticationAPI = {
-  login: async function addTimebox(credentials) {
-    const response = await makeRequest(
-      `${BASE_URL}/login`,
-      "POST",
-      credentials
-    );
-    const result = await response.json();
-    return result;
-  },
-};
+const FakeAuthenticationAPI = {
+  login: async function(credentials) {
+    await(200);
+    const { email, password } = credentials;
+    if (email === "bob@example.com" && password === "secret") {
+      return {
+        accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6I…IyIn0.UubxcVsLsPCIVnyQa546CVCrzSyMahnggB3BTTmpHCM"
+      }
+    }
+    throw new Error("Invalid credentials");
+  }
+}
 
-export default FetchAuthenticationAPI;
+export default FakeAuthenticationAPI;
