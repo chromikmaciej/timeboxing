@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/timeboxing/static/css/main.2cdbe041.chunk.css",
+    "main.js": "/timeboxing/static/js/main.5d3c9256.chunk.js",
+    "main.js.map": "/timeboxing/static/js/main.5d3c9256.chunk.js.map",
+    "runtime~main.js": "/timeboxing/static/js/runtime~main.df1ccd57.js",
+    "runtime~main.js.map": "/timeboxing/static/js/runtime~main.df1ccd57.js.map",
+    "static/js/2.2c176ae8.chunk.js": "/timeboxing/static/js/2.2c176ae8.chunk.js",
+    "static/js/2.2c176ae8.chunk.js.map": "/timeboxing/static/js/2.2c176ae8.chunk.js.map",
+    "static/js/3.846eba73.chunk.js": "/timeboxing/static/js/3.846eba73.chunk.js",
+    "static/js/3.846eba73.chunk.js.map": "/timeboxing/static/js/3.846eba73.chunk.js.map",
+    "static/js/4.eefc9481.chunk.js": "/timeboxing/static/js/4.eefc9481.chunk.js",
+    "static/js/4.eefc9481.chunk.js.map": "/timeboxing/static/js/4.eefc9481.chunk.js.map",
+    "static/js/5.a7c83f3c.chunk.js": "/timeboxing/static/js/5.a7c83f3c.chunk.js",
+    "static/js/5.a7c83f3c.chunk.js.map": "/timeboxing/static/js/5.a7c83f3c.chunk.js.map",
+    "index.html": "/timeboxing/index.html",
+    "precache-manifest.1f0d08a1c3843a623d52a233cdf9698b.js": "/timeboxing/precache-manifest.1f0d08a1c3843a623d52a233cdf9698b.js",
+    "service-worker.js": "/timeboxing/service-worker.js",
+    "static/css/main.2cdbe041.chunk.css.map": "/timeboxing/static/css/main.2cdbe041.chunk.css.map"
+  }
+}
